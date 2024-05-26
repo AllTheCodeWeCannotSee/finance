@@ -1,13 +1,9 @@
-"use client";
 
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertAccountSchema } from "@/db/schema";
 
-
-import { useCreateAccounts } from "../api/use-create-accounts";
-import { useNewAccount } from "../hooks/use-new-account";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,28 +15,34 @@ const formSchema = insertAccountSchema.pick({ name: true });
 
 type FormValues = z.input<typeof formSchema>;
 
+type Props = {
+    id?: string;
+    defaultValues?: FormValues;
+    onSubmit: (values: FormValues) => void;
+    onDeleted?: () => void;
+    disabled?: boolean;
+}
 
-export const AccountForm = () => {
-    const { isOpen, onClose } = useNewAccount();
-    const mutation = useCreateAccounts();
-
-    const handleSubmit = (values: FormValues) => {
-        mutation.mutate(values, {
-            onSuccess: () => {
-                onClose();
-            }
-        });
-    }
-
-    const disabled = mutation.isPending;
-
+export const AccountForm = ({
+    id,
+    defaultValues,
+    onSubmit,
+    onDeleted,
+    disabled,
+}: Props) => {
 
     const form = useForm<FormValues>({
-        defaultValues: {},
+        defaultValues,
         resolver: zodResolver(formSchema),
     })
 
+    const handleSubmit = (values: FormValues) => {
+        onSubmit(values);
+    };
 
+    const handleDelete = () => {
+        onDeleted?.();
+    };
 
     return (
         <Form {...form}>
@@ -67,8 +69,6 @@ export const AccountForm = () => {
                 <Button className="w-full" disabled={disabled}>
                     Create Account
                 </Button>
-
-
             </form>
         </Form>
     )
