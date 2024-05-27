@@ -13,6 +13,7 @@ import {
     getSortedRowModel,
     Row,
 } from "@tanstack/react-table"
+import { Trash } from "lucide-react"
 
 import {
     Table,
@@ -24,7 +25,9 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Trash } from "lucide-react"
+import { useConfirm } from "@/hooks/use-confirm"
+
+
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -41,6 +44,8 @@ export function DataTable<TData, TValue>({
     onDelete,
     disabled,
 }: DataTableProps<TData, TValue>) {
+    const [ConfirmationDialog, confirm] = useConfirm("Delete", "Are you sure you want to delete this item?");
+
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -65,6 +70,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
+            <ConfirmationDialog />
             <div className="flex items-center py-4 ">
                 <Input
                     placeholder={`Filter ${filterKey}...`}
@@ -79,6 +85,14 @@ export function DataTable<TData, TValue>({
                         className="ml-auto"
                         variant="destructive"
                         disabled={disabled}
+                        onClick={async () => {
+                            const ok = await confirm();
+                            if (ok) {
+                                onDelete(table.getFilteredSelectedRowModel().rows)
+                                table.resetRowSelection();
+                            }
+
+                        }}
 
                     >
                         <Trash className="mr-2 h-4 w-4" />

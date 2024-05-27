@@ -7,6 +7,7 @@ import { insertAccountSchema } from "@/db/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
 
 
 
@@ -19,7 +20,7 @@ type Props = {
     id?: string;
     defaultValues?: FormValues;
     onSubmit: (values: FormValues) => void;
-    onDeleted?: () => void;
+    onDelete?: () => void;
     disabled?: boolean;
 }
 
@@ -27,7 +28,7 @@ export const AccountForm = ({
     id,
     defaultValues,
     onSubmit,
-    onDeleted,
+    onDelete,
     disabled,
 }: Props) => {
 
@@ -41,7 +42,7 @@ export const AccountForm = ({
     };
 
     const handleDelete = () => {
-        onDeleted?.();
+        onDelete?.();
     };
 
     return (
@@ -67,8 +68,20 @@ export const AccountForm = ({
                     )}
                 />
                 <Button className="w-full" disabled={disabled}>
-                    Create Account
+                    {id ? "Save changes" : "Create account"}
                 </Button>
+                {!!id && (
+                    <Button
+                        type="button"
+                        disabled={disabled}
+                        onClick={handleDelete}
+                        className="w-full"
+                        variant="outline"
+                    >
+                        <Trash className="size-4 mr-2" />
+                        Delete account
+                    </Button>
+                )}
             </form>
         </Form>
     )

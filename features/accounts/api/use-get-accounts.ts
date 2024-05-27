@@ -1,9 +1,9 @@
-import { db } from "@/db/drizzle"
+
 import { client } from "@/lib/hono";
 import { useQuery } from "@tanstack/react-query"
 
 
-export const useGetAccounts = async () => {
+export const useGetAccounts = () => {
     const query = useQuery({
         queryKey: ["accounts"],
         queryFn: async () => {
@@ -16,4 +16,5 @@ export const useGetAccounts = async () => {
             return data;
         },
     });
+    return query;
 }
