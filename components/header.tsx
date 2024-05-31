@@ -1,8 +1,10 @@
+"use client";
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 import Logo from "@/components/logo";
 import Navigation from "@/components/navigation";
 import { Loader2 } from "lucide-react";
 import { WelcomeMsg } from "./welcome-msg";
+import { Filters } from "./filters";
 
 const Header = () => {
     return (
@@ -21,6 +23,7 @@ const Header = () => {
 
             </div>
             <WelcomeMsg />
+            <Filters />
         </div>
 
     );
